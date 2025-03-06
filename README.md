@@ -13,4 +13,14 @@ Allows for simple usage of ffmpeg via an llm.
 ## Requirements
 * ffmpeg
 * jq
-* [an OpenAI API key environment variable set](https://platform.openai.com/docs/quickstart?context=curl&language-preference=curl#create-and-export-an-api-key)
+* [an AI Studio API key environment variable set](https://docs.nebius.com/studio/api/authentication)
+
+### Usage with Nix
+
+Set NEBIUS_API_KEY property via `overrideAttrs` function when referencing in your configuration, like so:
+
+```nix
+inputs.llmpeg-nebius.packages.x86_64-linux.default.overrideAttrs (_: {
+    NEBIUS_API_KEY = "your_api_key";
+})
+```

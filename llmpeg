@@ -11,13 +11,13 @@ fi
 user_input="$*"
 
 # Conditional check for API keys
-if [ -n "$OPENAI_API_KEY" ]; then
-    # Store the curl response as a variable for OpenAI API
-    response=$(curl -s "https://api.openai.com/v1/chat/completions" \
+if [ -n "$NEBIUS_API_KEY" ]; then
+    # Store the curl response as a variable for Studio API
+    response=$(curl -s "https://api.studio.nebius.com/v1/chat/completions" \
         -H "Content-Type: application/json" \
-        -H "Authorization: Bearer $OPENAI_API_KEY" \
+        -H "Authorization: Bearer $NEBIUS_API_KEY" \
         -d "{
-            \"model\": \"gpt-4o-mini\",
+            \"model\": \"meta-llama/Llama-3.3-70B-Instruct-fast\",
             \"messages\": [
                 {
                     \"role\": \"system\",
@@ -29,32 +29,8 @@ if [ -n "$OPENAI_API_KEY" ]; then
                 }
             ]
         }")
-elif [ -n "$GROQ_API_KEY" ]; then
-    # Store the curl response as a variable for GROQ API
-    response=$(curl -s "https://api.groq.com/openai/v1/chat/completions" \
-        -X POST \
-        -H "Content-Type: application/json" \
-        -H "Authorization: Bearer ${GROQ_API_KEY}" \
-        -d "{
-            \"model\": \"llama-3.3-70b-versatile\",
-            \"messages\": [
-                {
-                    \"role\": \"system\",
-                    \"content\": \"You write ffmpeg commands based on the description from the user. You should only respond with a command line command for ffmpeg, never any additional text. Keep the output folder same as the input folder in the generated command. Propose the output file name based on input file name and the modification applied on it. All responses should be a single line without any line breaks.\n\nFor example, if the user asks \\\"convert a video folderX/input.mp4 from MP4 to WebM?\\\", you should respond with: \\\"ffmpeg -i folderX/input.mp4 -c:v libvpx -c:a libvorbis folderX/output_in_webm.webm\\\"\"
-                },
-                {
-                    \"role\": \"user\",
-                    \"content\": \"$user_input\"
-                }
-            ],
-            \"temperature\": 1,
-            \"max_tokens\": 1024,
-            \"top_p\": 1,
-            \"stream\": false,
-            \"stop\": null
-        }")
 else
-    echo "No API key found. Please set OPENAI_API_KEY or GROQ_API_KEY."
+    echo "No API key found. Please set NEBIUS_API_KEY."
     exit 1
 fi
 
@@ -80,4 +56,4 @@ echo "Generated command: $command"
 read -p "Press Enter to run the command, or Ctrl+C to cancel..."
 
 # Run the command with additional options
-eval "$(echo "$command" | sed 's/ffmpeg/ffmpeg -v quiet -stats/')"
+eval "$command"
