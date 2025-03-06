@@ -17,10 +17,11 @@ Allows for simple usage of ffmpeg via an llm.
 
 ### Usage with Nix
 
-Set NEBIUS_API_KEY property via `overrideAttrs` function when referencing in your configuration, like so:
+Set NEBIUS_API_KEY_PATH pointing to a file with AI Studio API key via `overrideAttrs` function when referencing in your configuration, like so:
 
 ```nix
 inputs.llmpeg-nebius.packages.x86_64-linux.default.overrideAttrs (_: {
-    NEBIUS_API_KEY = "your_api_key";
+    NEBIUS_API_KEY_PATH = "/my/api/file";
+    # or NEBIUS_API_KEY_PATH = ./my-api-file;
 })
 ```
