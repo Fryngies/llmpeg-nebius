@@ -3,7 +3,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { nixpkgs, ... }:
+  outputs = { nixpkgs, self }:
     let forEachSystem = f: nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-darwin" ] (system: f nixpkgs.legacyPackages.${system});
     in {
       packages = forEachSystem
@@ -27,6 +27,10 @@
               NEBIUS_API_KEY_PATH = "";
             };
         });
+
+      overlays.default = final: prev: {
+        llmpeg-nebius = self.packages.${prev.system}.default;
+      };
     };
 }
 
