@@ -17,11 +17,13 @@ Allows for simple usage of ffmpeg via an llm.
 
 ### Usage with Nix
 
-Set NEBIUS_API_KEY_PATH pointing to a file with AI Studio API key via `overrideAttrs` function when referencing in your configuration, like so:
+This package provides `withApiKey` function that allows to provide path to a file containing your API key.
 
 ```nix
-inputs.llmpeg-nebius.packages.x86_64-linux.default.overrideAttrs (_: {
-    NEBIUS_API_KEY_PATH = "/my/api/file";
-    # or NEBIUS_API_KEY_PATH = ./my-api-file;
-})
+home.packages = with pkgs; [
+    # using static path
+    (llmpeg-nebius.withApiKey "/path/to/file")
+    # or using sops-nix
+    # (llmpeg-nebius.withApiKey config.sops.secrets.nebiusApiKey.path)
+];
 ```
